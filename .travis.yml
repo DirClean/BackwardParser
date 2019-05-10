@@ -1,0 +1,18 @@
+jdk: oraclejdk8
+language: java
+before_install:
+- export VERSION=$TRAVIS_JOB_ID
+script:
+- "./gradlew :shadowJar"
+before_deploy:
+- git tag $VERSION
+deploy:
+  provider: releases
+  prerelease: true
+  skip_cleanup: true
+  api_key:
+    secure: l++NqokSGIGIswuWsl7dKrNRnCUj6ra5zbtWVJxBm+/R7Wfk1FPQhUJxOo5NYWcQCDsxHzl0Rzk5C3UprgMbi+mThxDdGagmfBUGV62QNwGReR5r9burBKOEDoU3NdWM09TYVbBIAmUMt4nH8l0exMghuI3gW/CVikpW4GQGcDGHyKlxhae/s92Y96Kykv6KXrhy3VbzqfD0FgxrilvgWrwYSGe6anLXOfHzXWKIhRzAuPrfpEkbBUNXD7Uwb4lqSfXNnMvoecC936jZYCz6jKCso6f0qspvDYfcQR0ldDFQRgO//bONxW/8vk56HoFFVqCRBWJpy0dkk7BQkt/jjF1p+6QKfC6Dx63k+oF1LT/a44NXJ8F2wT1OrWRpftENh9U/mRL2Io5dCI2KrMIbLb2rfzhWi0IeubWCDHblVoiaPD5hBCLLuAV1yb0dSh8iqnbS5L6eVONLcHLWuQ1RSkeM3Gcsd0nV6tpuKh7ltkKVMdgqRWM04OM79/AzQkbYg1mU/JaejFkV82uM+ZLG3yK8wOXHHH2AsP791mo2FclIPyeaxIT6ryIxJDz6xuK+9mwKrJlvG4lqs3T1jAWWz+8Q8+VtaArZJlCc0cUrZuBvKLkgV4Igk1xcON7PfhZpTY27SFAAJn2/dUtOcpgwqU6mZ2Qj+nDWBWEgDua2bTE=
+  file: ./build/libs/converter-1.0.jar
+  on:
+    repo: DirClean/BackwardParser
+    branch: master
