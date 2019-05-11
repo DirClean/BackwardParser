@@ -49,6 +49,9 @@ class RuleConverter {
                 System.exit(3)
                 return false
             }
+            if (!outputFolder.exists()) {
+                outputFolder.mkdir()
+            }
             if (outputFolder.isFile) {
                 System.err.println("Output folder is a file")
                 System.exit(3)
