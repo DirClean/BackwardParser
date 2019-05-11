@@ -6,7 +6,7 @@ import com.google.gson.JsonObject
 import java.io.File
 import java.io.FileWriter
 
-class RuleConverter {
+class App {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
