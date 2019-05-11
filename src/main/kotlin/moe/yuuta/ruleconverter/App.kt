@@ -10,15 +10,16 @@ class RuleConverter {
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            if (args.size != 3) {
-                System.err.println("Usage: RuleConverter <Source folder> <canary true | false> <output folder>")
+            if (args.size != 4) {
+                System.err.println("Usage: RuleConverter <Source folder> <canary true | false> <output folder> <branch>")
                 System.exit(1)
                 return
             }
             val source = File(args[0])
             val canary = args[1].toBoolean()
             val outputFolder = File(args[2])
-            System.out.println("Source: $source Out: $outputFolder (Canary: $canary)")
+            val branch = args[3]
+            System.out.println("Source: $source Out: $outputFolder (Canary: $canary, branch: $branch)")
             if (!lintArgs(source, outputFolder)) {
                 return
             }
@@ -30,12 +31,12 @@ class RuleConverter {
                     it.setCanary(canary)
                 }
             val rulesJson = Gson().toJsonTree(rules)
-            writeAndClose(rulesJson, FileWriter(deleteIfExists(File(outputFolder, "rules.json"))))
-            writeAndClose(wrap(rulesJson), FileWriter(deleteIfExists(File(outputFolder, "rules_wrapped.json"))))
+            writeAndClose(rulesJson, FileWriter(deleteIfExists(File(outputFolder, "rules_$branch.json"))))
+            writeAndClose(wrap(rulesJson), FileWriter(deleteIfExists(File(outputFolder, "rules_wrapped_$branch.json"))))
 
             val deletedJson = Gson().toJsonTree(parser.deleted)
-            writeAndClose(deletedJson, FileWriter(deleteIfExists(File(outputFolder, "deleted.json"))))
-            writeAndClose(wrap(deletedJson), FileWriter(deleteIfExists(File(outputFolder, "deleted_wrapped.json"))))
+            writeAndClose(deletedJson, FileWriter(deleteIfExists(File(outputFolder, "deleted_$branch.json"))))
+            writeAndClose(wrap(deletedJson), FileWriter(deleteIfExists(File(outputFolder, "deleted_wrapped_$branch.json"))))
         }
 
         private fun lintArgs(source: File, outputFolder: File): Boolean {
