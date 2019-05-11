@@ -25,13 +25,13 @@ class App {
             }
             outputFolder.mkdir()
             val parser = SourceParser(source, canary)
+            System.out.println("Exporting ${parser.getRules().size} rules")
             val rulesJson = Gson().toJsonTree(parser.getRules())
             writeAndClose(rulesJson, FileWriter(deleteIfExists(File(outputFolder, "rules_$branch.json"))))
             writeAndClose(wrap(rulesJson), FileWriter(deleteIfExists(File(outputFolder, "rules_wrapped_$branch.json"))))
             writeAndClose(wrap(parser.getRules().size), FileWriter(deleteIfExists(File(outputFolder, "rules_size_$branch.json"))))
 
             val deletedJson = Gson().toJsonTree(parser.getDeleted())
-            System.out.println(parser.getDeleted())
             writeAndClose(deletedJson, FileWriter(deleteIfExists(File(outputFolder, "deleted_$branch.json"))))
             writeAndClose(wrap(deletedJson), FileWriter(deleteIfExists(File(outputFolder, "deleted_wrapped_$branch.json"))))
             writeAndClose(wrap(parser.getDeleted().size), FileWriter(deleteIfExists(File(outputFolder, "deleted_size_$branch.json"))))
