@@ -198,7 +198,7 @@ class SourceParser(sourceFolder: File, private val canary: Boolean) {
     private fun getRelativePath(file: File): String? {
         val dirBuilder = StringBuilder()
         val path = file.absolutePath.substring(baseFolder.absolutePath.length)
-        val paths = path.split(Pattern.quote(File.separator))
+        val paths = path.split(Pattern.compile(File.separator))
         for (i in 0 until (paths.size - 1) /* 最后一个是本文件，忽略 */) {
             val folder = paths[i]
             if (folder.trim() == "") {
