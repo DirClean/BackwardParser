@@ -30,12 +30,12 @@ class RuleConverter {
                     it.setCanary(canary)
                 }
             val rulesJson = Gson().toJsonTree(rules)
-            writeAndClose(rulesJson, FileWriter(File(outputFolder, "rules.json")))
-            writeAndClose(wrap(rulesJson), FileWriter(File(outputFolder, "rules_wrapped.json")))
+            writeAndClose(rulesJson, FileWriter(deleteIfExists(File(outputFolder, "rules.json"))))
+            writeAndClose(wrap(rulesJson), FileWriter(deleteIfExists(File(outputFolder, "rules_wrapped.json"))))
 
             val deletedJson = Gson().toJsonTree(parser.deleted)
-            writeAndClose(deletedJson, FileWriter(File(outputFolder, "deleted.json")))
-            writeAndClose(wrap(deletedJson), FileWriter(File(outputFolder, "deleted_wrapped.json")))
+            writeAndClose(deletedJson, FileWriter(deleteIfExists(File(outputFolder, "deleted.json"))))
+            writeAndClose(wrap(deletedJson), FileWriter(deleteIfExists(File(outputFolder, "deleted_wrapped.json"))))
         }
 
         private fun lintArgs(source: File, outputFolder: File): Boolean {
@@ -49,13 +49,8 @@ class RuleConverter {
                 System.exit(3)
                 return false
             }
-            if (outputFolder.exists()) {
-                System.err.println("Output file is exists")
-                System.exit(2)
-                return false
-            }
             if (outputFolder.isFile) {
-                System.err.println("Output file is a file")
+                System.err.println("Output folder is a file")
                 System.exit(3)
                 return false
             }
@@ -72,6 +67,12 @@ class RuleConverter {
             objWithWrapper.addProperty("code", 0)
             objWithWrapper.add("data", data)
             return objWithWrapper
+        }
+
+        private fun deleteIfExists(file: File): File {
+            if (file.isDirectory) throw IllegalArgumentException("The file cannot be a directory")
+            if (file.exists()) file.delete()
+            return file
         }
     }
 }
